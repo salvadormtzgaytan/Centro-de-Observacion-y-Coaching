@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Channel extends Model
 {
@@ -12,6 +13,12 @@ class Channel extends Model
     protected $fillable = [
         'key',
         'name',
+        'order'
+    ];
+
+
+    protected $casts = [
+        'order' => 'integer',
     ];
 
     // Plantillas asociadas a este canal
@@ -44,5 +51,15 @@ class Channel extends Model
             'id',                  // PK en channels
             'id'                   // PK en guide_responses
         );
+    }
+
+    /**
+     * Ordenar siempre por el campo `order` de forma ascendente.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('order');
+        });
     }
 }

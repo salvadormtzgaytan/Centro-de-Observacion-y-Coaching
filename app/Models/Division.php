@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class Division extends Model
 {
@@ -12,6 +14,12 @@ class Division extends Model
     protected $fillable = [
         'key',
         'name',
+        'order',
+    ];
+
+
+    protected $casts = [
+        'order' => 'integer',
     ];
 
     // Plantillas asociadas a esta división
@@ -44,5 +52,15 @@ class Division extends Model
             'id',                  // PK en divisions
             'id'                   // PK en guide_responses
         );
+    }
+
+    /**
+     * Ordenar siempre por el campo `order` de forma ascendente.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('order');
+        });
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Level extends Model
 {
@@ -12,6 +13,11 @@ class Level extends Model
     protected $fillable = [
         'key',
         'name',
+        'order',
+    ];
+
+    protected $casts = [
+        'order' => 'integer',
     ];
 
     public function guideTemplates()
@@ -37,5 +43,15 @@ class Level extends Model
             'guide_template_id',
             'guide_response_id'
         );
+    }
+
+    /**
+     * Ordenar siempre por el campo `order` de forma ascendente.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('ordered', function (Builder $builder) {
+            $builder->orderBy('order');
+        });
     }
 }

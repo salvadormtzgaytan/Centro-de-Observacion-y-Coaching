@@ -30,11 +30,18 @@ class LevelResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('key')
+                    ->label(__('level.fields.key'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('name')
+                    ->label(__('level.fields.name'))
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('order')
+                    ->label(__('level.fields.order'))
+                    ->numeric()
+                    ->default(0)
+                    ->required(),
             ]);
     }
 
@@ -43,14 +50,21 @@ class LevelResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('key')
+                    ->label(__('level.fields.key'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('level.fields.name'))
                     ->searchable(),
+                Tables\Columns\TextColumn::make('order')
+                    ->label(__('level.fields.order'))
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('level.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('level.fields.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

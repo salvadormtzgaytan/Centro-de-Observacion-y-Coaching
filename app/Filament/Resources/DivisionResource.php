@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DivisionResource extends Resource
 {
-     // — Menú en español dentro de "Catálogos" —
+    // — Menú en español dentro de "Catálogos" —
     protected static ?string $navigationGroup       = 'Catálogos';
     protected static ?int    $navigationSort        = 3;
     protected static ?string $navigationLabel       = 'Divisiones';
@@ -30,11 +30,18 @@ class DivisionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('key')
+                    ->label(__('division.fields.key'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('name')
+                    ->label(__('division.fields.name'))
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('order')
+                    ->label(__('division.fields.order'))
+                    ->numeric()
+                    ->default(0)
+                    ->required(),
             ]);
     }
 
@@ -43,14 +50,21 @@ class DivisionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('key')
+                    ->label(__('division.fields.key'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('division.fields.name'))
                     ->searchable(),
+                Tables\Columns\TextColumn::make('order')
+                    ->label(__('division.fields.order'))
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('division.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('division.fields.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

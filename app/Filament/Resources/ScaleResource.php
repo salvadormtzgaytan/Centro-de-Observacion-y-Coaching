@@ -29,12 +29,15 @@ class ScaleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('label')
+                    ->label(__('scale.fields.label'))
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('value')
+                    ->label(__('scale.fields.value'))
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('order')
+                    ->label(__('scale.fields.order'))
                     ->required()
                     ->numeric()
                     ->default(0),
@@ -46,18 +49,23 @@ class ScaleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('label')
+                    ->label(__('scale.fields.label'))
                     ->searchable(),
                 Tables\Columns\TextColumn::make('value')
+                    ->label(__('scale.fields.value'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('order')
+                    ->label(__('scale.fields.order'))
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label(__('scale.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label(__('scale.fields.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

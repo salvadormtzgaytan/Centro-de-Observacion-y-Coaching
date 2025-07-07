@@ -25,7 +25,7 @@ class GuideTemplateResource extends Resource
     protected static ?int    $navigationSort  = 1;
     protected static ?string $navigationLabel = 'Guías';
     protected static ?string $modelLabel      = 'Guía';
-    protected static ?string $pluralModelLabel= 'Guías';
+    protected static ?string $pluralModelLabel = 'Guías';
 
     protected static ?string $model = GuideTemplate::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -44,17 +44,29 @@ class GuideTemplateResource extends Resource
 
                             Select::make('division_id')
                                 ->label('División')
-                                ->relationship('division', 'name')
+                                ->relationship(
+                                    'division',
+                                    'name',
+                                    fn($query) => $query->orderBy('order')
+                                )
                                 ->required(),
 
                             Select::make('level_id')
                                 ->label('Nivel')
-                                ->relationship('level', 'name')
+                                ->relationship(
+                                    'level',
+                                    'name',
+                                    fn($query) => $query->orderBy('order')
+                                )
                                 ->required(),
 
                             Select::make('channel_id')
                                 ->label('Canal')
-                                ->relationship('channel', 'name')
+                                ->relationship(
+                                    'channel',
+                                    'name',
+                                    fn($query) => $query->orderBy('order')
+                                )
                                 ->required(),
 
                             Select::make('status')
@@ -111,28 +123,46 @@ class GuideTemplateResource extends Resource
 
                                             CheckboxList::make('options')
                                                 ->label('Opciones de escala')
-                                                ->options(fn () => Scale::all()->pluck('label', 'value')->toArray())
-                                                ->default(fn () => Scale::all()->pluck('value')->map(fn($v) => (string) $v)->toArray())
-                                                ->visible(fn (callable $get) => $get('type') === 'select'),
+                                                ->options(
+                                                    fn() =>
+                                                    Scale::all()->mapWithKeys(
+                                                        fn($s) => [
+                                                            $s->value => "{$s->label} ({$s->value})"
+                                                        ]
+                                                    )->toArray()
+                                                )
+                                                ->default(fn() => Scale::all()->pluck('value')->map(fn($v) => (string) $v)->toArray())
+                                                ->visible(fn(callable $get) => $get('type') === 'select')
+                                                ->reactive()
+                                                ->afterStateUpdated(function ($state, callable $set) {
+                                                    // $state contiene los valores seleccionados
+                                                    $labels = Scale::whereIn('value', $state)
+                                                        ->get()
+                                                        ->map(fn($s) => "{$s->label} = {$s->value}")
+                                                        ->implode(', ');
+                                                    $set('help_text', $labels);
+                                                }),
 
                                             Textarea::make('help_text')
                                                 ->label('Texto de ayuda')
                                                 ->nullable()
-                                                ->visible(fn ($get) => $get('type') === 'select')
-                                                ->default(fn () => 
-                                                    Scale::all()
-                                                         ->map(fn($s) => "{$s->label} = {$s->value}")
-                                                         ->implode(', ')
+                                                ->visible(fn($get) => $get('type') === 'select')
+                                                ->default(
+                                                    fn() => Scale::all()
+                                                        ->map(fn($s) => "{$s->label} = {$s->value}")
+                                                        ->implode(', ')
                                                 ),
-
                                             TextInput::make('order')
                                                 ->label('Orden del ítem')
                                                 ->numeric()
-                                                ->default(0),
-                                        ]),
+                                                ->default(0)
+                                                ->required(),
+                                        ])
                                 ]),
                         ]),
-                ])->columnSpanFull(),
+                ])
+                    ->skippable()
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -152,7 +182,7 @@ class GuideTemplateResource extends Resource
                         'warning' => 'draft',
                         'success' => 'published',
                     ])
-                    ->formatStateUsing(fn (string $state): string => [
+                    ->formatStateUsing(fn(string $state): string => [
                         'draft'     => 'Borrador',
                         'published' => 'Publicado',
                     ][$state] ?? $state),
