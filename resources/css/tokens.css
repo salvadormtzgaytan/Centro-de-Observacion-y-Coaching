@@ -1,0 +1,94 @@
+/* Variante dark independiente de data-theme */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Fuente base + color tokens (light) */
+@theme {
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  /* Paleta neutral (Zinc) – Flux-friendly */
+  --color-zinc-50:  #fafafa;
+  --color-zinc-100: #f5f5f5;
+  --color-zinc-200: #e5e5e5;
+  --color-zinc-300: #d4d4d4;
+  --color-zinc-400: #a3a3a3;
+  --color-zinc-500: #737373;
+  --color-zinc-600: #525252;
+  --color-zinc-700: #404040;
+  --color-zinc-800: #262626;
+  --color-zinc-900: #171717;
+  --color-zinc-950: #0a0a0a;
+
+  /* ——— CORPORATIVO (LIGHT) ——— */
+  /* Primario */
+  --color-primary-50:  #f0f2f5;
+  --color-primary-100: #d4dae3;
+  --color-primary-200: #a9b5c7;
+  --color-primary-300: #7e90ab;
+  --color-primary-400: #536b8f;
+  --color-primary-500: #324158; /* base */
+  --color-primary-600: #2a3749;
+  --color-primary-700: #212d3a;
+  --color-primary-800: #19232b;
+  --color-primary-900: #10191c;
+  --color-primary-950: #0a0f13;
+
+  /* Secundario */
+  --color-secondary-50:  #fef9f0;
+  --color-secondary-100: #fdf0d4;
+  --color-secondary-200: #fce1a9;
+  --color-secondary-300: #fad27e;
+  --color-secondary-400: #f9c353;
+  --color-secondary-500: #fbb03b; /* base */
+  --color-secondary-600: #e09a2a;
+  --color-secondary-700: #c5841d;
+  --color-secondary-800: #aa6e10;
+  --color-secondary-900: #8f5803;
+  --color-secondary-950: #744200;
+}
+
+/* Dark theme tokens (sólo variables) */
+@layer theme {
+  :root { color-scheme: light dark; }
+
+  .dark {
+    /* ——— CORPORATIVO (DARK) ——— */
+    --color-primary-50:  #0a0f13;
+    --color-primary-100: #10191c;
+    --color-primary-200: #19232b;
+    --color-primary-300: #212d3a;
+    --color-primary-400: #2a3749;
+    --color-primary-500: #3d5470; /* más legible en dark */
+    --color-primary-600: #536b8f;
+    --color-primary-700: #7e90ab;
+    --color-primary-800: #a9b5c7;
+    --color-primary-900: #d4dae3;
+    --color-primary-950: #f0f2f5;
+
+    --color-secondary-50:  #744200;
+    --color-secondary-100: #8f5803;
+    --color-secondary-200: #aa6e10;
+    --color-secondary-300: #c5841d;
+    --color-secondary-400: #e09a2a;
+    --color-secondary-500: #fbb03b;
+    --color-secondary-600: #f9c353;
+    --color-secondary-700: #fad27e;
+    --color-secondary-800: #fce1a9;
+    --color-secondary-900: #fdf0d4;
+    --color-secondary-950: #fef9f0;
+  }
+}
+
+/* Base: transiciones suaves y borde por defecto */
+@layer base {
+  * { transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button { border-color: var(--color-gray-200, currentColor); }
+
+  /* Respeta usuarios con “reduce motion” */
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+}

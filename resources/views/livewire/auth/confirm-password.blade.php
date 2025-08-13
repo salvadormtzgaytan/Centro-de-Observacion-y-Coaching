@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
@@ -9,7 +8,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $password = '';
 
     /**
-     * Confirm the current user's password.
+     * Confirma la contraseña del usuario actual.
      */
     public function confirmPassword(): void
     {
@@ -22,7 +21,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'password' => $this->password,
         ])) {
             throw ValidationException::withMessages([
-                'password' => __('auth.password'),
+                'password' => __('La contraseña ingresada es incorrecta.'),
             ]);
         }
 
@@ -33,26 +32,34 @@ new #[Layout('components.layouts.auth')] class extends Component {
 }; ?>
 
 <div class="flex flex-col gap-6">
+    <!-- Encabezado -->
     <x-auth-header
-        :title="__('Confirm password')"
-        :description="__('This is a secure area of the application. Please confirm your password before continuing.')"
+        :title="__('Confirmar contraseña')"
+        :description="__('Esta es un área segura de la aplicación. Por favor confirma tu contraseña para continuar.')"
     />
 
-    <!-- Session Status -->
+    <!-- Estado de sesión -->
     <x-auth-session-status class="text-center" :status="session('status')" />
 
     <form wire:submit="confirmPassword" class="flex flex-col gap-6">
-        <!-- Password -->
+        <!-- Contraseña -->
         <flux:input
             wire:model="password"
-            :label="__('Password')"
+            :label="__('Contraseña')"
             type="password"
             required
-            autocomplete="new-password"
-            :placeholder="__('Password')"
+            autocomplete="current-password"
+            placeholder="Ingresa tu contraseña"
             viewable
         />
 
-        <flux:button variant="primary" type="submit" class="w-full">{{ __('Confirm') }}</flux:button>
+        <!-- Botón de confirmación -->
+        <flux:button 
+            variant="primary" 
+            type="submit" 
+            class="w-full"
+        >
+            {{ __('Confirmar') }}
+        </flux:button>
     </form>
 </div>

@@ -1,0 +1,863 @@
+/* ==========================================================================
+   CSS PROFESIONAL para DomPDF 2.1 – Reporte de Evaluación
+   Versión Mejorada y Completa
+-------------------------------------------------------------------------- */
+
+/* ---- Configuración Base ---- */
+@page {
+  font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+  font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #1f2937;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+body {
+  margin: 10mm 5mm;
+}
+/* ---- Tipografía Profesional ---- */
+.h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e40af;
+  margin: 0 0 10px 0;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 5px;
+}
+
+.h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 6px 0;
+}
+
+/* ---- Header del Documento ---- */
+.document-header {
+  background-color: #1f2937;
+  color: white;
+  padding: 20px 15px;
+  margin-bottom: 0;
+  border-radius: 0 0 8px 8px;
+}
+
+.header-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.logo-section {
+  vertical-align: middle;
+  width: 25%;
+  padding-right: 15px;
+}
+
+.company-logo {
+  max-height: 60px;
+  max-width: 120px;
+  width: auto;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+.header-info {
+  vertical-align: middle;
+  text-align: center;
+  padding: 0 20px;
+  width: 50%;
+}
+
+.company-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.document-type {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e0e7ff;
+  margin-bottom: 2px;
+}
+
+.document-subtitle {
+  font-size: 11px;
+  color: #c7d2fe;
+  font-style: italic;
+}
+
+.evaluation-badge {
+  vertical-align: middle;
+  text-align: right;
+  width: 25%;
+}
+
+.evaluation-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2px;
+}
+
+.evaluation-date {
+  font-size: 12px;
+  color: #e0e7ff;
+  margin-bottom: 6px;
+}
+
+.divider-line {
+  height: 3px;
+  background-color: #3b82f6;
+  margin: 15px 0;
+  border-radius: 3px;
+}
+
+/* ---- Estructura del Documento ---- */
+.page-container {
+  padding: 0 15px;
+}
+
+.content-wrapper {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+/* ---- Cards Profesionales ---- */
+.card {
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #f8fafc;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.card-content {
+  padding: 16px;
+}
+
+/* ---- Resumen Ejecutivo ---- */
+.executive-summary {
+  background-color: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.summary-grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.summary-left,
+.summary-right {
+  vertical-align: top;
+  padding: 12px;
+}
+
+/* Información del participante */
+.participant-label,
+.coach-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+
+.participant-name,
+.coach-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.participant-role,
+.coach-credentials {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Destacado de puntaje */
+.score-highlight {
+  text-align: center;
+  padding: 12px;
+  background-color: #f1f5f9;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+.score-label,
+.progress-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.score-value {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.score--excellent {
+  color: #059669;
+}
+.score--good {
+  color: #d97706;
+}
+.score--needs-improvement {
+  color: #dc2626;
+}
+
+.score-description {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* ---- Progreso Mejorado ---- */
+.progress-enhanced {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.progress__bar {
+  width: 85%;
+  border: 1px solid #d1d5db;
+  background-color: #f3f4f6;
+  padding: 0;
+  height: 12px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress__pct {
+  width: 15%;
+  text-align: right;
+  padding-left: 8px;
+  color: #111827;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.progress__fill {
+  height: 12px;
+  background-color: #10b981;
+  border-radius: 6px;
+}
+
+.progress-details {
+  font-size: 10px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 4px;
+}
+
+/* ---- Secciones ---- */
+.section {
+  margin: 25px 0;
+}
+
+.section-header {
+  margin-bottom: 15px;
+  border-left: 4px solid #3b82f6;
+  padding-left: 12px;
+}
+
+.section__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.section-description {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* ---- Grid de Métricas ---- */
+.metrics-grid {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+.metric-card {
+  display: table-row;
+}
+
+.metric-card {
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  border-left: 4px solid #6b7280;
+  margin-bottom: 12px;
+  padding: 12px;
+}
+
+.metric-header {
+  margin-bottom: 6px;
+}
+
+.metric-title {
+  font-weight: 700;
+  color: #111827;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.metric-score {
+  font-size: 16px;
+  font-weight: 700;
+  color: #059669;
+  text-align: right;
+}
+
+/* Progreso */
+.metric-progress {
+  margin-top: 6px;
+}
+
+.progress {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.progress__bar {
+  border: 1px solid #d1d5db;
+  background-color: #f3f4f6;
+  height: 10px;
+  padding: 0;
+}
+
+.progress__fill {
+  height: 10px;
+  background-color: #10b981;
+}
+
+.metric-card.metric--excellent > div {
+  border-left-color: #10b981;
+}
+
+.metric-card.metric--good > div {
+  border-left-color: #f59e0b;
+}
+
+.metric-card.metric--needs-improvement > div {
+  border-left-color: #ef4444;
+}
+
+.metric-header {
+  display: table;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.metric-title {
+  display: table-cell;
+  width: 70%;
+  font-weight: 700;
+  color: #111827;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.metric-score {
+  display: table-cell;
+  width: 30%;
+  text-align: right;
+  font-size: 16px;
+  font-weight: 700;
+  color: #059669;
+  vertical-align: middle;
+}
+
+.metric-progress {
+  margin: 8px 0;
+}
+
+.metric-details {
+  display: table;
+  width: 100%;
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.metric-responses {
+  display: table-cell;
+  width: 50%;
+}
+
+.metric-status {
+  display: table-cell;
+  width: 50%;
+  text-align: right;
+  font-weight: 700;
+}
+
+/* ---- Gráficas Mejoradas ---- */
+.chart-container-enhanced {
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.chart-header {
+  background-color: #f8fafc;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px 0;
+}
+
+.chart-description {
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.chart-content {
+  padding: 16px;
+  text-align: center;
+}
+
+.chart-image {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+}
+
+/* ---- Recomendaciones ---- */
+.recommendations-section {
+  background-color: #fefce8;
+  border: 1px solid #facc15;
+}
+
+.recommendations-grid {
+  display: table;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+
+.recommendation-item {
+  display: table-row;
+}
+
+.recommendation-item > div {
+  display: table-cell;
+  vertical-align: top;
+  padding-bottom: 12px;
+}
+
+.recommendation-icon {
+  width: 40px;
+  font-size: 20px;
+  text-align: center;
+  padding-top: 2px;
+  color: #d97706;
+}
+
+.recommendation-content {
+  padding-left: 12px;
+}
+
+.recommendation-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.recommendation-text {
+  font-size: 11px;
+  color: #374151;
+  line-height: 1.4;
+}
+
+/* ---- Firmas Profesionales ---- */
+.signatures-section {
+  background-color: #fafafa;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+}
+
+.signatures-enhanced {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.signature-cell {
+  width: 50%;
+  vertical-align: top;
+  padding: 16px;
+  border-right: 1px solid #e5e7eb;
+}
+
+.signature-cell:last-child {
+  border-right: none;
+}
+
+.signature-header {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.signature-role {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.signature-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.signature-area {
+  height: 80px;
+  margin: 12px 0;
+  position: relative;
+}
+
+.signature-image {
+  max-height: 70px;
+  max-width: 100%;
+  display: block;
+  margin: 0 auto;
+}
+
+.signature-placeholder {
+  height: 70px;
+  display: table;
+  width: 100%;
+}
+
+.signature-pending {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 11px;
+  font-style: italic;
+}
+
+.signature-line {
+  height: 1px;
+  background-color: #111827;
+  margin-top: 8px;
+}
+
+.signature-line--dashed {
+  border-bottom: 1px dashed #d1d5db;
+  background-color: transparent;
+}
+
+.signature-details {
+  text-align: center;
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.signature-status-text,
+.signature-date {
+  margin: 2px 0;
+}
+
+/* ---- Badge Mejorado ---- */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+}
+
+.badge--info {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.badge--success {
+  background-color: #10b981;
+  color: white;
+}
+
+.badge--warning {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.badge--danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+/* ---- Footer del Documento ---- */
+.document-footer {
+  background-color: #f8fafc;
+  border-top: 2px solid #e5e7eb;
+  padding: 15px;
+  margin-top: 30px;
+  border-radius: 0 0 6px 6px;
+}
+
+.footer-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.footer-left {
+  vertical-align: middle;
+}
+
+.footer-company {
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.footer-tagline {
+  font-size: 10px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.footer-right {
+  vertical-align: middle;
+  text-align: right;
+}
+
+.generated-label {
+  font-size: 9px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.generated-date {
+  font-size: 11px;
+  color: #374151;
+  font-weight: 700;
+}
+
+/* ---- Utilidades Mejoradas ---- */
+.mt-0 {
+  margin-top: 0 !important;
+}
+.mt-2 {
+  margin-top: 2px !important;
+}
+.mt-4 {
+  margin-top: 4px !important;
+}
+.mt-6 {
+  margin-top: 6px !important;
+}
+.mt-8 {
+  margin-top: 8px !important;
+}
+.mt-10 {
+  margin-top: 10px !important;
+}
+.mt-15 {
+  margin-top: 15px !important;
+}
+.mt-20 {
+  margin-top: 20px !important;
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+.mb-2 {
+  margin-bottom: 2px !important;
+}
+.mb-4 {
+  margin-bottom: 4px !important;
+}
+.mb-6 {
+  margin-bottom: 6px !important;
+}
+.mb-8 {
+  margin-bottom: 8px !important;
+}
+.mb-10 {
+  margin-bottom: 10px !important;
+}
+.mb-15 {
+  margin-bottom: 15px !important;
+}
+.mb-20 {
+  margin-bottom: 20px !important;
+}
+
+.pt-0 {
+  padding-top: 0 !important;
+}
+.pt-2 {
+  padding-top: 2px !important;
+}
+.pt-4 {
+  padding-top: 4px !important;
+}
+.pt-6 {
+  padding-top: 6px !important;
+}
+.pt-8 {
+  padding-top: 8px !important;
+}
+.pt-10 {
+  padding-top: 10px !important;
+}
+
+.pb-0 {
+  padding-bottom: 0 !important;
+}
+.pb-2 {
+  padding-bottom: 2px !important;
+}
+.pb-4 {
+  padding-bottom: 4px !important;
+}
+.pb-6 {
+  padding-bottom: 6px !important;
+}
+.pb-8 {
+  padding-bottom: 8px !important;
+}
+.pb-10 {
+  padding-bottom: 10px !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+.text-left {
+  text-align: left !important;
+}
+.text-right {
+  text-align: right !important;
+}
+
+.text-sm {
+  font-size: 10px !important;
+}
+.text-xs {
+  font-size: 9px !important;
+}
+
+.font-bold {
+  font-weight: 700 !important;
+}
+.font-medium {
+  font-weight: 600 !important;
+}
+
+.text-gray-500 {
+  color: #6b7280 !important;
+}
+.text-gray-600 {
+  color: #4b5563 !important;
+}
+.text-blue-600 {
+  color: #2563eb !important;
+}
+.text-green-600 {
+  color: #059669 !important;
+}
+.text-yellow-600 {
+  color: #d97706 !important;
+}
+.text-red-600 {
+  color: #dc2626 !important;
+}
+
+.bg-gray-50 {
+  background-color: #f9fafb !important;
+}
+.bg-blue-50 {
+  background-color: #eff6ff !important;
+}
+.bg-green-50 {
+  background-color: #ecfdf5 !important;
+}
+.bg-yellow-50 {
+  background-color: #fffbeb !important;
+}
+.bg-red-50 {
+  background-color: #fef2f2 !important;
+}
+
+.rounded {
+  border-radius: 4px !important;
+}
+.rounded-lg {
+  border-radius: 8px !important;
+}
+
+.shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+.shadow {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ---- Ajustes para DomPDF ---- */
+.page-break {
+  page-break-after: always;
+}
+.avoid-break {
+  page-break-inside: avoid;
+}
+.keep-together {
+  page-break-inside: avoid;
+}
+.keep-with-next {
+  page-break-after: avoid;
+}

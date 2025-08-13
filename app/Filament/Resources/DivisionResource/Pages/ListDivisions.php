@@ -6,6 +6,8 @@ use App\Filament\Resources\DivisionResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
+
+
 class ListDivisions extends ListRecords
 {
     protected static string $resource = DivisionResource::class;

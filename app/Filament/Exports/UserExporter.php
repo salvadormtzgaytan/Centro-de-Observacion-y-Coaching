@@ -25,16 +25,24 @@ class UserExporter extends Exporter
 
             ExportColumn::make('roles.name')
                 ->label('Roles'),
+
+            ExportColumn::make('is_active')
+                ->label('Activo')
+                ->formatStateUsing(fn (bool $state): string => $state ? 'Sí' : 'No'),
+
+            ExportColumn::make('last_login_at')
+                ->label('Último ingreso')
+                ->dateTimeFormat('Y-m-d H:i:s'),
         ];
     }
 
     public static function getCompletedNotificationBody(Export $export): string
     {
         $rows = number_format($export->successful_rows);
-        $body = "La exportación de usuarios se ha completado con {$rows} " . str('fila')->plural($export->successful_rows) . ".";
+        $body = "La exportación de usuarios se ha completado con {$rows} ".str('fila')->plural($export->successful_rows).'.';
 
         if ($failed = $export->getFailedRowsCount()) {
-            $body .= " {$failed} " . str('fila')->plural($failed) . " no se pudieron exportar.";
+            $body .= " {$failed} ".str('fila')->plural($failed).' no se pudieron exportar.';
         }
 
         return $body;

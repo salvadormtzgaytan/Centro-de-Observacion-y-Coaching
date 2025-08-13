@@ -6,29 +6,29 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('guide_item_responses', function (Blueprint $table) {
             $table->id();
+
+            // Cuando se borra una respuesta de guía, sus respuestas de ítem se eliminan en cascada
             $table->foreignId('guide_response_id')
                 ->constrained('guide_responses')
                 ->cascadeOnDelete();
+
+            // Si existe alguna respuesta para este ítem, no se permite borrar el ítem
             $table->foreignId('template_item_id')
                 ->constrained('template_items')
-                ->cascadeOnDelete();
-            $table->string('value');            // e.g. 'Cumple 0.5'
-            $table->decimal('score_obtained', 5, 2); // e.g. 0.5
-            $table->text('observation')->nullable(); // Observaciones libres
+                ->restrictOnDelete();
+
+            $table->json('answer')->nullable();
+            $table->decimal('score_obtained', 8, 2)->default(0.00);
             $table->timestamps();
+
+            $table->index(['guide_response_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('guide_item_responses');

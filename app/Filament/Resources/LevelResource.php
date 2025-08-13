@@ -3,26 +3,28 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\LevelResource\Pages;
-use App\Filament\Resources\LevelResource\RelationManagers;
 use App\Models\Level;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class LevelResource extends Resource
 {
-    // — Menú en español dentro de "Catálogos" —
-    protected static ?string $navigationGroup       = 'Catálogos';
-    protected static ?int    $navigationSort        = 4;
-    protected static ?string $navigationLabel       = 'Niveles';
-    protected static ?string $modelLabel            = 'Nivel';
-    protected static ?string $pluralModelLabel      = 'Niveles';
+    protected static ?string $model = Level::class;
 
-    protected static ?string $model          = Level::class;
+    // Menú en español dentro de "Catálogos"
+    protected static ?string $navigationGroup = 'Catálogos';
+
+    protected static ?int $navigationSort = 60;
+
+    protected static ?string $navigationLabel = 'Niveles';
+
+    protected static ?string $modelLabel = 'Nivel';
+
+    protected static ?string $pluralModelLabel = 'Niveles';
+
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
 
     public static function form(Form $form): Form
@@ -30,18 +32,23 @@ class LevelResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('key')
-                    ->label(__('level.fields.key'))
+                    ->label(__('filament.resources.level.fields.key'))
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->placeholder(__('filament.resources.level.placeholders.key')),
+
                 Forms\Components\TextInput::make('name')
-                    ->label(__('level.fields.name'))
+                    ->label(__('filament.resources.level.fields.name'))
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->placeholder(__('filament.resources.level.placeholders.name')),
+
                 Forms\Components\TextInput::make('order')
-                    ->label(__('level.fields.order'))
+                    ->label(__('filament.resources.level.fields.order'))
                     ->numeric()
                     ->default(0)
-                    ->required(),
+                    ->required()
+                    ->placeholder(__('filament.resources.level.placeholders.order')),
             ]);
     }
 
@@ -50,30 +57,37 @@ class LevelResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('key')
-                    ->label(__('level.fields.key'))
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->label(__('level.fields.name'))
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('order')
-                    ->label(__('level.fields.order'))
+                    ->label(__('filament.resources.level.fields.key'))
+                    ->searchable()
                     ->sortable(),
+
+                Tables\Columns\TextColumn::make('name')
+                    ->label(__('filament.resources.level.fields.name'))
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('order')
+                    ->label(__('filament.resources.level.fields.order'))
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('level.fields.created_at'))
+                    ->label(__('filament.resources.level.fields.created_at'))
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('level.fields.updated_at'))
+                    ->label(__('filament.resources.level.fields.updated_at'))
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('recent')
+                    ->label(__('filament.resources.level.filters.recent'))
+                    ->query(fn ($query) => $query->where('created_at', '>=', now()->subMonth())),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -84,9 +98,7 @@ class LevelResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

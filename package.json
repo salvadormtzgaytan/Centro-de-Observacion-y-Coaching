@@ -10,8 +10,14 @@
         "alpinejs": "^3.14.9",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
+        "chart.js": "^4.5.0",
+        "chartjs-node-canvas": "^5.0.0",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
+        "puppeteer": "^24.16.0",
+        "quill": "^2.0.3",
+        "signature_pad": "^5.0.10",
+        "sweetalert2": "^11.22.2",
         "tailwindcss": "^4.0.7",
         "vite": "^6.0"
     },
@@ -21,6 +27,7 @@
         "lightningcss-linux-x64-gnu": "^1.29.1"
     },
     "devDependencies": {
-        "@defstudio/vite-livewire-plugin": "^2.0.6"
+        "@defstudio/vite-livewire-plugin": "^2.0.6",
+        "vite-plugin-static-copy": "^3.1.1"
     }
 }

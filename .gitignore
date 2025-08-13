@@ -26,3 +26,4 @@ yarn-error.log
 npm-debug.log*
 yarn-error.log*
 phpunit.xml*
+instalar-extensions-laravel.ps1

@@ -2,102 +2,123 @@
 
 namespace App\Filament\Resources;
 
-
-use App\Models\User;
-use Filament\Tables;
-use Filament\Forms\Form;
-use Filament\Tables\Table;
-use Filament\Resources\Resource;
-use Illuminate\Support\Facades\Auth;
-use Filament\Forms\Components\Select;
 use App\Filament\Exports\UserExporter;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Actions\ExportBulkAction;
-use App\Filament\Resources\UserResource\Pages;
-use Filament\Actions\Exports\Enums\ExportFormat;
+use App\Filament\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages\ListUsers;
-
+use App\Filament\Resources\UserResource\Pages\ViewUser;
+use App\Models\User;
+use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Tables\Actions\ForceDeleteAction;
+use Filament\Tables\Actions\RestoreAction;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
-    protected static ?string $navigationLabel = 'Usuarios';
-    protected static ?int $navigationSort = 1;
-    protected static ?string $modelLabel = 'Usuario';
-    protected static ?string $pluralModelLabel = 'Usuarios';
+
     protected static ?string $navigationGroup = 'Gestión de Usuarios';
-    /**
-     * Show badge with total user count
-     */
+
+    protected static ?int $navigationSort = 40;
+
+    protected static ?string $navigationLabel = 'Usuarios';
+
+    protected static ?string $modelLabel = 'Usuario';
+
+    protected static ?string $pluralModelLabel = 'Usuarios';
+
     public static function getNavigationBadge(): ?string
     {
-        return static::$model::count();
+        return (string) static::$model::count();
     }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                TextInput::make('name')
-                    ->label('Nombre')
-                    ->required()
-                    ->maxLength(255)
-                    ->placeholder('Ingrese el nombre completo del usuario')
-                    ->helperText('El nombre completo del usuario, por ejemplo')
+                FileUpload::make('profile_photo_path')
+                    ->label('Foto de perfil')
+                    ->image()
+                    ->disk('public')
+                    ->directory('profile-photos')
                     ->columnSpanFull(),
 
+                TextInput::make('name')
+                    ->label(__('filament.resources.user.fields.name'))
+                    ->required()
+                    ->maxLength(255)
+                    ->columnSpanFull()
+                    ->placeholder(__('filament.resources.user.placeholders.name'))
+                    ->helperText(__('filament.resources.user.helper_texts.name')),
+
                 TextInput::make('email')
-                    ->label('Correo electrónico')
+                    ->label(__('filament.resources.user.fields.email'))
                     ->email()
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255)
-                    ->placeholder('Ingrese el correo electrónico del usuario'),
+                    ->placeholder(__('filament.resources.user.placeholders.email')),
 
                 TextInput::make('password')
-                    ->label('Contraseña')
+                    ->label(__('filament.resources.user.fields.password'))
                     ->password()
-                    ->required(fn($livewire) => $livewire instanceof Pages\CreateUser)
+                    ->required(fn ($livewire) => $livewire instanceof CreateUser)
+                    ->dehydrated(fn ($state) => filled($state))
                     ->maxLength(255)
-                    ->placeholder('Ingrese una contraseña segura')
-                    ->dehydrated(fn($livewire) => $livewire instanceof Pages\CreateUser)
-                    ->dehydrateStateUsing(fn($state) => bcrypt($state)),
-
+                    ->placeholder(__('filament.resources.user.placeholders.password'))
+                    ->helperText(__('filament.resources.user.helper_texts.password')),
 
                 Select::make('parent_id')
-                    ->label('Supervisor')
+                    ->label(__('filament.resources.user.fields.parent_id'))
                     ->relationship(
                         'parent',
                         'name',
-                        function (\Illuminate\Database\Eloquent\Builder $query, EditUser  $livewire) {
-                            $editingId = $livewire->getRecord() ? $livewire->getRecord()->id : null;
+                        static function (Builder $query, $livewire) {
+                            $editingId = $livewire->getRecord()?->id;
                             $query
-                                ->when(
-                                    $editingId,
-                                    fn($q)            // If there is a record being edited
-                                    => $q->where('id', '<>', $editingId)
-                                )
-                                // Excluir a todos sus descendientes para evitar ciclos
-                                ->when($editingId, fn($q) => $q->whereNotIn('id', User::find($editingId)->descendants()->pluck('id')))
+                                ->when($editingId, fn (Builder $q) => $q->where('id', '<>', $editingId))
+                                ->when($editingId, fn (Builder $q) => $q->whereNotIn(
+                                    'id',
+                                    User::find($editingId)?->descendants()->pluck('id')->toArray() ?? []
+                                ))
                                 ->orderBy('name');
                         }
                     )
                     ->searchable()
                     ->preload()
-                    ->placeholder('Seleccione un supervisor')
-                    ->nullable(),
+                    ->nullable()
+                    ->placeholder(__('filament.resources.user.placeholders.parent')),
 
                 Select::make('roles')
-                    ->label('Roles')
-                    ->multiple()
+                    ->label(__('filament.resources.user.fields.roles'))
                     ->relationship('roles', 'name')
+                    ->multiple()
                     ->searchable()
-                    ->placeholder('Seleccione los roles del usuario')
                     ->preload(),
+
+                Toggle::make('is_active')
+                    ->label('Activo')
+                    ->default(true)
+                    ->required(),
             ]);
     }
 
@@ -105,61 +126,80 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                ImageColumn::make('profile_photo_path')
+                    ->label('Foto')
+                    ->disk('public')
+                    ->height(40)
+                    ->width(40),
+
                 TextColumn::make('name')
-                    ->label('Nombre')
+                    ->label(__('filament.resources.user.fields.name'))
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('email')
-                    ->label('Correo')
+                    ->label(__('filament.resources.user.fields.email'))
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('parent.name')
-                    ->label('Supervisor')
+                    ->label(__('filament.resources.user.fields.parent_id'))
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('roles.name')
-                    ->label('Roles')
+                    ->label(__('filament.resources.user.fields.roles'))
                     ->badge(),
+                TextColumn::make('last_login_at')
+                    ->label('Último ingreso')
+                    ->dateTime()
+                    ->sortable(),
+                ToggleColumn::make('is_active')
+                    ->label('Activo')  // Etiqueta que se muestra en la cabecera de la columna
+                    ->onColor('success')  // Color cuando está activo (verde)
+                    ->offColor('danger')  // Color cuando está inactivo (rojo)
+                    ->sortable()  // Permite ordenar la columna
+                    ->afterStateUpdated(function (User $record, $state) {
+                        $record->update(['is_active' => $state]);
+                    }),
             ])
             ->filters([
-                //
-                // Puedes agregar filtros personalizados aquí si es necesario
-                Tables\Filters\SelectFilter::make('parent_id')
-                    ->label('Supervisor')
+                SelectFilter::make('parent_id')
+                    ->label(__('filament.resources.user.filters.supervisor.label'))
                     ->relationship('parent', 'name')
                     ->searchable()
-                    ->placeholder('Seleccione un supervisor'),
+                    ->placeholder(__('filament.resources.user.filters.supervisor.placeholder')),
+
+                TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
+                RestoreAction::make(),
+                ForceDeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                DeleteBulkAction::make(),
                 ExportBulkAction::make()
                     ->exporter(UserExporter::class)
-                    ->columnMapping(false)->formats([
-                        ExportFormat::Xlsx,
-                    ])
+                    ->columnMapping(false)
+                    ->formats([ExportFormat::Xlsx]),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'view' => ViewUser::route('/{record}'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

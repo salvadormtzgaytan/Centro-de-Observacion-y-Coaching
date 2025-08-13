@@ -1,0 +1,265 @@
+@layer components {
+  /* Layout */
+  .co-page        { @apply mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8; }
+
+  /* Header */
+  .co-title       { @apply mb-2 text-2xl font-semibold text-slate-900 dark:text-slate-50; }
+  .co-subtitle    { @apply text-slate-600 dark:text-slate-400; }
+  .co-divider     { @apply h-5 w-px bg-slate-300 dark:bg-slate-600; }
+  .co-status-badge{ @apply inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium
+                           text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200; }
+
+  /* Alertas */
+  .co-alert-ro    { @apply mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3
+                           text-amber-800 dark:border-amber-700 dark:bg-amber-900/20 dark:text-amber-200; }
+
+  /* Tabs */
+  .co-tabs        { @apply flex flex-wrap gap-1 rounded-t-lg border-b border-slate-200 bg-white/60 p-1
+                           dark:border-slate-700 dark:bg-slate-900/40; }
+  .co-tab         { @apply rounded-t-md px-4 py-3 text-sm font-medium transition-colors
+                           text-slate-600 hover:text-accent-foreground hover:bg-accent dark:text-slate-400 dark:hover:text-neutral-50 cursor-pointer; }
+  .co-tab--active { @apply bg-white text-primary-700 border-b-2 border-primary-600
+                           dark:bg-slate-800 dark:text-neutral-50 dark:border-neutral-200; }
+
+  /* Panel + sección */
+  .co-panel       { @apply rounded-b-lg rounded-tr-lg border border-t-0 border-slate-200 bg-white p-6 shadow-sm
+                           dark:border-slate-700 dark:bg-slate-800; }
+  .co-section     { @apply rounded-xl border border-slate-200 bg-slate-50 p-4
+                           dark:border-slate-700 dark:bg-slate-900/40; }
+  .co-section-h3  { @apply mb-4 text-sm font-semibold text-slate-800 dark:text-slate-200; }
+
+  /* Filas de ítems */
+  .co-row         { @apply flex flex-col gap-3 sm:flex-row sm:items-start; }
+  .co-row-v       { @apply flex flex-col gap-2; }
+  .co-label       { @apply block text-sm font-medium text-slate-800 dark:text-slate-100; }
+  .co-help        { @apply mt-1 text-xs text-slate-600 dark:text-slate-400; }
+  .co-field       { @apply w-full sm:w-72; }
+  .co-row-v .co-field { @apply w-full; }
+  /* Inputs (para Flux) */
+  .co-input       { @apply w-full border-slate-300 bg-white text-slate-900
+                           dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100; }
+
+  /* Loading overlay */
+  .co-overlay     { @apply fixed inset-0 z-40 items-center justify-center bg-black/30; }
+  .co-overlay-box { @apply rounded-lg bg-white px-4 py-3 text-sm text-slate-700 shadow
+                           dark:bg-slate-800 dark:text-slate-200; }
+
+  /* Modal firma */
+  .co-modal-wrap  { @apply fixed inset-0 z-50 flex items-center justify-center bg-black/60; }
+  .co-modal       { @apply w-[28rem] max-w-[95vw] rounded-lg border border-slate-200 bg-white p-6 shadow-xl
+                           dark:border-slate-700 dark:bg-slate-800; }
+
+  /* Readonly */
+  .co-readonly    { @apply pointer-events-none opacity-60; }
+}
+/* Evaluation Wizard – estilos específicos de la vista
+   Requiere que Tailwind y tu tema ya estén importados en app.css
+   Importa este archivo al final de tus @imports. */
+
+@layer components {
+  /* ---------- Encabezados de pasos ---------- */
+  .co-step-title {
+    @apply mb-4 text-2xl font-bold text-primary-600 dark:text-primary-400;
+  }
+
+  /* ---------- Tabla de coachees ---------- */
+  .co-table-shell {
+    @apply overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm
+           dark:border-slate-700 dark:bg-slate-800;
+  }
+
+  .co-table {
+    @apply w-full text-left text-sm text-slate-700 dark:text-slate-300;
+  }
+
+  .co-table thead {
+    @apply bg-slate-100 text-slate-900 dark:bg-slate-700 dark:text-slate-200;
+  }
+
+  .co-table th,
+  .co-table td {
+    @apply px-4 py-3 align-middle;
+  }
+
+  .co-tr {
+    @apply border-b border-slate-200 hover:bg-slate-50
+           dark:border-slate-700 dark:hover:bg-slate-700/50;
+  }
+
+  .co-tr--selected {
+    @apply bg-primary-100 dark:bg-primary-900/30;
+  }
+
+  .co-pagination {
+    @apply px-4 py-3 dark:border-t dark:border-slate-700;
+  }
+
+  /* ---------- Elección de método (cards con radio) ---------- */
+  .co-choice {
+    @apply flex cursor-pointer items-start rounded-lg border border-slate-200 p-4 transition-all
+           hover:border-primary-500 hover:bg-primary-50
+           dark:border-slate-700 dark:hover:border-primary-500 dark:hover:bg-slate-700/50;
+  }
+
+  .co-choice--active {
+    @apply border-primary-500 bg-primary-50 shadow dark:border-primary-400 dark:bg-blue-950;
+  }
+
+  /* ---------- Grid de tarjetas / catálogo ---------- */
+  .co-grid-cards {
+    @apply mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3;
+  }
+
+  .co-guide-card {
+    @apply rounded-xl border border-slate-200 bg-white p-4 shadow transition-all
+           hover:border-primary-400
+           dark:border-slate-700 dark:bg-slate-800 dark:hover:border-primary-400;
+  }
+
+  .co-guide-card__icon {
+    @apply text-primary-500;
+  }
+
+  .co-guide-card__title {
+    @apply font-semibold text-primary-700 dark:text-primary-200;
+  }
+
+  .co-guide-card__desc {
+    @apply text-sm text-slate-600 dark:text-slate-300;
+  }
+
+  /* ---------- Selects / inputs (compat con Flux) ---------- */
+  .co-input {
+    @apply w-full border-slate-300 bg-white text-slate-900
+           dark:border-slate-600 dark:bg-slate-900 dark:text-slate-100;
+  }
+
+  /* ---------- Alertas ---------- */
+  .co-alert {
+    @apply rounded-xl bg-yellow-50 p-6 text-yellow-800 shadow
+           dark:bg-yellow-900/40 dark:text-yellow-200;
+  }
+
+  /* Alias para mantener consistencia con tu clase de solo-lectura/avisos */
+  .co-alert-ro {
+    @apply mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3
+           text-amber-800 dark:border-amber-700 dark:bg-amber-900/20 dark:text-amber-200;
+  }
+
+  /* ---------- Navegación footer del wizard ---------- */
+  .co-footer {
+    @apply mt-8 flex items-center justify-between border-t pt-6 dark:border-slate-700;
+  }
+
+  .co-btn-prev {
+    @apply text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700;
+  }
+}
+
+@layer utilities {
+  /* Contenedor opcional para scope local (si lo agregas a la raíz del blade) */
+  .co-wizard {
+    @apply space-y-6;
+  }
+
+  /* Divider reutilizable (si no lo tienes en global) */
+  .co-divider {
+    @apply h-5 w-px bg-slate-300 dark:bg-slate-600;
+  }
+}
+
+/* rco-wizard.css */
+@layer components {
+  /* ====== Wrapper & títulos ====== */
+  .co-wizard       { @apply space-y-6; }
+  .co-step-title   { @apply mb-4 text-2xl font-semibold text-slate-900 dark:text-slate-50; }
+
+  /* ====== Alert genérico (info / warning suave) ====== */
+  .co-alert {
+    @apply rounded-xl border p-4 shadow;
+    @apply border-amber-300 bg-amber-50 text-amber-800;
+    @apply dark:border-amber-700 dark:bg-amber-900/20 dark:text-amber-200;
+  }
+
+  /* ====== Tabla (Paso 1) ====== */
+  .co-table-shell  { @apply overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800; }
+  .co-table        { @apply w-full text-left text-sm text-slate-700 dark:text-slate-300; }
+  .co-table thead  { @apply bg-slate-100 text-slate-900 dark:bg-slate-700 dark:text-slate-200; }
+  .co-table th,
+  .co-table td     { @apply px-4 py-3; }
+  .co-tr           { @apply border-b border-slate-200 hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-700/50; }
+
+  /* Seleccionado con acento Flux */
+  .co-tr--selected {
+    background-color: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  }
+  .dark .co-tr--selected {
+    background-color: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  }
+
+  .co-pagination   { @apply px-4 py-3 dark:border-t dark:border-slate-700; }
+
+  /* ====== Opciones (Paso 2) ====== */
+  .co-choice {
+    @apply flex cursor-pointer items-start rounded-lg border p-4 transition-all;
+    @apply border-slate-200 dark:border-slate-700;
+    @apply bg-white dark:bg-slate-800;
+  }
+  .co-choice:hover {
+    background-color: color-mix(in srgb, var(--color-accent) 6%, transparent);
+    border-color: var(--color-accent);
+  }
+  .co-choice--active {
+    box-shadow: inset 0 0 0 1px var(--color-accent);
+    background-color: color-mix(in srgb, var(--color-accent) 8%, white);
+  }
+  .dark .co-choice--active {
+    background-color: color-mix(in srgb, var(--color-accent) 14%, #0f172a);
+  }
+
+  /* ====== Cards de guías (Paso 3) ====== */
+  .co-grid-cards   { @apply mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3; }
+
+  .co-guide-card {
+    @apply rounded-xl border bg-white p-4 shadow transition-all dark:bg-slate-800;
+    @apply border-slate-200 dark:border-slate-700;
+  }
+  .co-guide-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-1px);
+  }
+
+  .co-guide-card__icon  { color: var(--color-accent); }
+  .co-guide-card__title { @apply font-semibold text-slate-900 dark:text-slate-100; }
+  .co-guide-card__desc  { @apply text-sm text-slate-600 dark:text-slate-300; }
+
+  /* ====== Footer navegación ====== */
+  .co-footer      { @apply mt-8 flex items-center justify-between border-t pt-6 dark:border-slate-700; }
+  .co-btn-prev    { @apply text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700; }
+
+  /* ====== Divider fino reutilizable ====== */
+  .co-divider     { @apply h-5 w-px bg-slate-300 dark:bg-slate-600; }
+  /* co-input ya existe; opcional: variar tamaño o espaciado del selector de ciclo */
+  .co-input--lg { padding: .75rem 1rem; border-radius: var(--radius-lg, 0.75rem); }
+
+}
+
+/* coachee-sessions.css */
+@layer components {
+  .co-badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+  .co-badge--success { @apply bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200; }
+  .co-badge--warning { @apply bg-amber-100  text-amber-800  dark:bg-amber-900/30  dark:text-amber-200; }
+  .co-badge--info    { @apply bg-sky-100    text-sky-800    dark:bg-sky-900/30    dark:text-sky-200; }
+  .co-badge--neutral { @apply bg-slate-100  text-slate-700  dark:bg-slate-800/60  dark:text-slate-200; }
+  .co-badge--danger  { @apply bg-rose-100   text-rose-800   dark:bg-rose-900/30   dark:text-rose-200; }
+}
+@layer components {
+  .signature-box { @apply mt-3 flex items-center justify-center bg-slate-50 dark:bg-slate-800/50 rounded; }
+  .signature-img { @apply max-h-20 object-contain; }
+}
+
+@layer components {
+  .co-section canvas { @apply rounded bg-white dark:bg-slate-900; }
+}

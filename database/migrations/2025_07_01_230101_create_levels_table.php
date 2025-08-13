@@ -6,22 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('levels', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();    // ej. 'basico'
-            $table->string('name');             // ej. 'Básico'
+            $table->string('key')->unique();
+            $table->string('name');
+            $table->unsignedInteger('order')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('levels');

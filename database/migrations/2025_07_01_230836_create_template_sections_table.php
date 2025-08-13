@@ -6,32 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('template_sections', function (Blueprint $table) {
             $table->id();
-
-            // Relación con la plantilla de guía
             $table->foreignId('guide_template_id')
-                  ->constrained('guide_templates')
-                  ->cascadeOnDelete();
-
-            // Título de la sección (e.g. “Introducción”, “Diagnóstico”, etc.)
+                ->constrained('guide_templates')
+                ->cascadeOnDelete();
             $table->string('title');
-
-            // Orden de presentación dentro de la plantilla
             $table->unsignedInteger('order')->default(0);
-
+            $table->softDeletes();
             $table->timestamps();
+            $table->index(['guide_template_id', 'order']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('template_sections');

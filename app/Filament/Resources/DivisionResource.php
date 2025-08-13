@@ -3,26 +3,28 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\DivisionResource\Pages;
-use App\Filament\Resources\DivisionResource\RelationManagers;
 use App\Models\Division;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class DivisionResource extends Resource
 {
-    // — Menú en español dentro de "Catálogos" —
-    protected static ?string $navigationGroup       = 'Catálogos';
-    protected static ?int    $navigationSort        = 3;
-    protected static ?string $navigationLabel       = 'Divisiones';
-    protected static ?string $modelLabel            = 'División';
-    protected static ?string $pluralModelLabel      = 'Divisiones';
+    protected static ?string $model = Division::class;
 
-    protected static ?string $model          = Division::class;
+    // — Menú en español dentro de "Catálogos" —
+    protected static ?string $navigationGroup = 'Catálogos';
+
+    protected static ?int $navigationSort = 60;
+
+    protected static ?string $navigationLabel = 'Líneas Terapéuticas';
+
+    protected static ?string $modelLabel = 'Línea Terapéutica';
+
+    protected static ?string $pluralModelLabel = 'Líneas Terapéuticas';
+
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     public static function form(Form $form): Form
@@ -30,15 +32,17 @@ class DivisionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('key')
-                    ->label(__('division.fields.key'))
+                    ->label(__('filament.resources.division.fields.key'))
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('name')
-                    ->label(__('division.fields.name'))
+                    ->label(__('filament.resources.division.fields.name'))
                     ->required()
                     ->maxLength(255),
+
                 Forms\Components\TextInput::make('order')
-                    ->label(__('division.fields.order'))
+                    ->label(__('filament.resources.division.fields.order'))
                     ->numeric()
                     ->default(0)
                     ->required(),
@@ -50,30 +54,20 @@ class DivisionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('key')
-                    ->label(__('division.fields.key'))
+                    ->label(__('filament.resources.division.fields.key'))
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('name')
-                    ->label(__('division.fields.name'))
+                    ->label(__('filament.resources.division.fields.name'))
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('order')
-                    ->label(__('division.fields.order'))
+                    ->label(__('filament.resources.division.fields.order'))
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('division.fields.created_at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('division.fields.updated_at'))
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -84,9 +78,7 @@ class DivisionResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

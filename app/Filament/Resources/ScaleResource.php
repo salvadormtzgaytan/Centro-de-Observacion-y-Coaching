@@ -3,44 +3,53 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ScaleResource\Pages;
-use App\Filament\Resources\ScaleResource\RelationManagers;
 use App\Models\Scale;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ScaleResource extends Resource
 {
-    protected static ?string $navigationGroup       = 'Catálogos';
-    protected static ?int    $navigationSort        = 2;
-    protected static ?string $navigationLabel       = 'Escalas';
-    protected static ?string $modelLabel            = 'Escala';
-    protected static ?string $pluralModelLabel      = 'Escalas';
+    protected static ?string $model = Scale::class;
 
-    protected static ?string $model                  = Scale::class;
-    protected static ?string $navigationIcon         = 'heroicon-o-adjustments-horizontal';
+    // Menú en español dentro de "Catálogos"
+    protected static ?string $navigationGroup = 'Catálogos';
+
+    protected static ?int $navigationSort = 60;
+
+    protected static ?string $navigationLabel = 'Escalas';
+
+    protected static ?string $modelLabel = 'Escala';
+
+    protected static ?string $pluralModelLabel = 'Escalas';
+
+    protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\TextInput::make('label')
-                    ->label(__('scale.fields.label'))
+                    ->label(__('filament.resources.scale.fields.label'))
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255)
+                    ->placeholder(__('filament.resources.scale.placeholders.label')),
+
                 Forms\Components\TextInput::make('value')
-                    ->label(__('scale.fields.value'))
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('order')
-                    ->label(__('scale.fields.order'))
+                    ->label(__('filament.resources.scale.fields.value'))
                     ->required()
                     ->numeric()
-                    ->default(0),
+                    ->step(0.01)
+                    ->placeholder(__('filament.resources.scale.placeholders.value')),
+
+                Forms\Components\TextInput::make('order')
+                    ->label(__('filament.resources.scale.fields.order'))
+                    ->required()
+                    ->numeric()
+                    ->default(0)
+                    ->placeholder(__('filament.resources.scale.placeholders.order')),
             ]);
     }
 
@@ -49,32 +58,38 @@ class ScaleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('label')
-                    ->label(__('scale.fields.label'))
-                    ->searchable(),
+                    ->label(__('filament.resources.scale.fields.label'))
+                    ->searchable()
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('value')
-                    ->label(__('scale.fields.value'))
+                    ->label(__('filament.resources.scale.fields.value'))
                     ->numeric()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('order')
-                    ->label(__('scale.fields.order'))
+                    ->label(__('filament.resources.scale.fields.order'))
                     ->numeric()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
-                    ->label(__('scale.fields.created_at'))
+                    ->label(__('filament.resources.scale.fields.created_at'))
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->label(__('scale.fields.updated_at'))
+                    ->label(__('filament.resources.scale.fields.updated_at'))
                     ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                Tables\Filters\Filter::make('recent')
+                    ->label(__('filament.resources.scale.filters.recent'))
+                    ->query(fn ($query) => $query->where('created_at', '>=', now()->subMonth())),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -85,9 +100,7 @@ class ScaleResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

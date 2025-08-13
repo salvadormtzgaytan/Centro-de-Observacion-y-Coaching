@@ -2,209 +2,220 @@
 
 namespace App\Filament\Resources;
 
-use App\Models\Scale;
 use App\Filament\Resources\GuideTemplateResource\Pages;
+use App\Filament\Resources\GuideTemplateResource\RelationManagers\SectionsRelationManager;
+use App\Models\Channel;
 use App\Models\GuideTemplate;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Components\Wizard;
-use Filament\Forms\Components\Wizard\Step;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
+use App\Models\Level;
 use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ForceDeleteAction;
+use Filament\Tables\Actions\ForceDeleteBulkAction;
+use Filament\Tables\Actions\RestoreAction;
+use Filament\Tables\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class GuideTemplateResource extends Resource
 {
+    protected static ?string $model = GuideTemplate::class;
+
     protected static ?string $navigationGroup = 'Gestión de Guías';
-    protected static ?int    $navigationSort  = 1;
+
+    protected static ?int $navigationSort = 50;
+
     protected static ?string $navigationLabel = 'Guías';
-    protected static ?string $modelLabel      = 'Guía';
+
+    protected static ?string $modelLabel = 'Guía';
+
     protected static ?string $pluralModelLabel = 'Guías';
 
-    protected static ?string $model = GuideTemplate::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                Wizard::make([
-                    Step::make('Detalles')
-                        ->schema([
-                            TextInput::make('name')
-                                ->label('Nombre de la plantilla')
-                                ->required()
-                                ->maxLength(255),
+        return $form->schema([
+            TextInput::make('name')
+                ->required()
+                ->maxLength(255)
+                ->unique(ignoreRecord: true, modifyRuleUsing: function ($rule, $get) {
+                    $channelId = $get('channel_id');
+                    if ($channelId) {
+                        $rule->where('channel_id', $channelId);
+                    }
 
-                            Select::make('division_id')
-                                ->label('División')
-                                ->relationship(
-                                    'division',
-                                    'name',
-                                    fn($query) => $query->orderBy('order')
-                                )
-                                ->required(),
+                    return $rule;
+                }),
 
-                            Select::make('level_id')
-                                ->label('Nivel')
-                                ->relationship(
-                                    'level',
-                                    'name',
-                                    fn($query) => $query->orderBy('order')
-                                )
-                                ->required(),
+            Select::make('level_id')
+                ->label(__('filament.resources.guide_template.fields.level_id'))
+                ->options(Level::pluck('name', 'id'))
+                ->searchable()
+                ->preload()
+                ->required(),
 
-                            Select::make('channel_id')
-                                ->label('Canal')
-                                ->relationship(
-                                    'channel',
-                                    'name',
-                                    fn($query) => $query->orderBy('order')
-                                )
-                                ->required(),
+            Select::make('channel_id')
+                ->label(__('filament.resources.guide_template.fields.channel_id'))
+                ->options(Channel::pluck('name', 'id'))
+                ->searchable()
+                ->preload()
+                ->required(),
 
-                            Select::make('status')
-                                ->label('Estado')
-                                ->options([
-                                    'draft'     => 'Borrador',
-                                    'published' => 'Publicado',
-                                ])
-                                ->required(),
-                        ]),
+            Select::make('status')
+                ->label(__('filament.resources.guide_template.fields.status'))
+                ->options(GuideTemplate::statusLabels())
+                ->native(false)
+                ->required()
+                ->default('draft'),
 
-                    Step::make('Secciones & Ítems')
-                        ->schema([
-                            Repeater::make('sections')
-                                ->label('Secciones')
-                                ->relationship('sections')
-                                ->orderColumn('order')
-                                ->reorderable()
-                                ->collapsible()
-                                ->addActionLabel('Añadir sección')
-                                ->schema([
-                                    TextInput::make('title')
-                                        ->label('Título de sección')
-                                        ->required()
-                                        ->maxLength(255),
+            // Repeater::make('sections')
+            //     ->label(__('filament.resources.guide_template.fields.sections'))
+            //     ->relationship('sections')
+            //     ->orderColumn('order')
+            //     ->reorderable()
+            //     ->collapsible()
+            //     ->columnSpanFull()
+            //     ->addActionLabel(__('filament.actions.add_section'))
+            //     ->minItems(1, __('filament.validation.at_least_one_section'))
+            //     ->schema([
+            //         TextInput::make('title')
+            //             ->label(__('filament.resources.guide_template.fields.section_title'))
+            //             ->required()
+            //             ->maxLength(255),
 
-                                    TextInput::make('order')
-                                        ->label('Orden')
-                                        ->numeric()
-                                        ->default(0),
-
-                                    Repeater::make('items')
-                                        ->label('Ítems')
-                                        ->relationship('items')
-                                        ->orderColumn('order')
-                                        ->reorderable()
-                                        ->collapsible()
-                                        ->addActionLabel('Añadir ítem')
-                                        ->schema([
-                                            TextInput::make('label')
-                                                ->label('Pregunta')
-                                                ->required()
-                                                ->maxLength(255),
-
-                                            Select::make('type')
-                                                ->label('Tipo de respuesta')
-                                                ->options([
-                                                    'text'   => 'Texto libre',
-                                                    'select' => 'Selección',
-                                                ])
-                                                ->reactive()
-                                                ->required()
-                                                ->default('select'),
-
-                                            CheckboxList::make('options')
-                                                ->label('Opciones de escala')
-                                                ->options(
-                                                    fn() =>
-                                                    Scale::all()->mapWithKeys(
-                                                        fn($s) => [
-                                                            $s->value => "{$s->label} ({$s->value})"
-                                                        ]
-                                                    )->toArray()
-                                                )
-                                                ->default(fn() => Scale::all()->pluck('value')->map(fn($v) => (string) $v)->toArray())
-                                                ->visible(fn(callable $get) => $get('type') === 'select')
-                                                ->reactive()
-                                                ->afterStateUpdated(function ($state, callable $set) {
-                                                    // $state contiene los valores seleccionados
-                                                    $labels = Scale::whereIn('value', $state)
-                                                        ->get()
-                                                        ->map(fn($s) => "{$s->label} = {$s->value}")
-                                                        ->implode(', ');
-                                                    $set('help_text', $labels);
-                                                }),
-
-                                            Textarea::make('help_text')
-                                                ->label('Texto de ayuda')
-                                                ->nullable()
-                                                ->visible(fn($get) => $get('type') === 'select')
-                                                ->default(
-                                                    fn() => Scale::all()
-                                                        ->map(fn($s) => "{$s->label} = {$s->value}")
-                                                        ->implode(', ')
-                                                ),
-                                            TextInput::make('order')
-                                                ->label('Orden del ítem')
-                                                ->numeric()
-                                                ->default(0)
-                                                ->required(),
-                                        ])
-                                ]),
-                        ]),
-                ])
-                    ->skippable()
-                    ->columnSpanFull(),
-            ]);
+            //         TextInput::make('order')
+            //             ->label(__('filament.resources.guide_template.fields.section_order'))
+            //             ->numeric()
+            //             ->default(0)
+            //             ->required(),
+            //     ]),
+        ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Plantilla')->searchable(),
-                TextColumn::make('division.name')->label('División')->sortable(),
-                TextColumn::make('level.name')->label('Nivel')->sortable(),
-                TextColumn::make('channel.name')->label('Canal')->sortable(),
-                TextColumn::make('status')
-                    ->label('Estado')
-                    ->sortable()
+                TextColumn::make('name')
+                    ->label(__('filament.resources.guide_template.fields.name'))
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('level.name')
+                    ->label(__('filament.resources.guide_template.fields.level_id'))
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('channel.name')
+                    ->label(__('filament.resources.guide_template.fields.channel_id'))
+                    ->searchable()
+                    ->sortable(),
+
+                // contador de secciones (sin BadgeColumn)
+                TextColumn::make('sections_count')
+                    ->label(__('filament.resources.guide_template.fields.sections') ?: 'Secciones')
+                    ->counts('sections')
                     ->badge()
-                    ->colors([
-                        'warning' => 'draft',
-                        'success' => 'published',
-                    ])
-                    ->formatStateUsing(fn(string $state): string => [
-                        'draft'     => 'Borrador',
-                        'published' => 'Publicado',
-                    ][$state] ?? $state),
-                TextColumn::make('created_at')->label('Creado')->dateTime()->sortable()->toggleable(),
-                TextColumn::make('updated_at')->label('Modificado')->dateTime()->sortable()->toggleable(),
+                    ->color('primary')
+                    ->sortable(),
+
+                TextColumn::make('status')
+                    ->label(__('filament.resources.guide_template.fields.status'))
+                    ->badge()
+                    ->color(fn (string $state) => match ($state) {
+                        'draft' => 'warning',
+                        'published' => 'success',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn (string $state) => GuideTemplate::statusLabels()[$state] ?? $state)
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label(__('filament.resources.guide_template.fields.created_at'))
+                    ->dateTime()
+                    ->since() // "hace X"
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('updated_at')
+                    ->label(__('filament.resources.guide_template.fields.updated_at'))
+                    ->dateTime()
+                    ->since()
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('deleted_at')
+                    ->label(__('filament.resources.guide_template.fields.deleted_at'))
+                    ->dateTime()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([])
-            ->actions([Tables\Actions\EditAction::make()])
-            ->bulkActions([Tables\Actions\DeleteBulkAction::make()]);
+            ->defaultSort('updated_at', 'desc')
+            ->filters([
+                TrashedFilter::make(),
+
+                SelectFilter::make('status')
+                    ->label(__('filament.resources.guide_template.fields.status'))
+                    ->options(GuideTemplate::statusLabels()),
+
+                SelectFilter::make('channel_id')
+                    ->label(__('filament.resources.guide_template.fields.channel_id'))
+                    ->options(fn () => Channel::query()->orderBy('order')->pluck('name', 'id')->all()),
+
+                SelectFilter::make('level_id')
+                    ->label(__('filament.resources.guide_template.fields.level_id'))
+                    ->options(fn () => Level::query()->orderBy('order')->pluck('name', 'id')->all()),
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                EditAction::make(),
+                DeleteAction::make(),
+                RestoreAction::make(),
+                ForceDeleteAction::make(),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                    RestoreBulkAction::make(),
+                    ForceDeleteBulkAction::make(),
+                ]),
+            ]);
     }
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            // Si más adelante quieres administrar grupos (many-to-many):
+            // GuideGroupsRelationManager::class,
+            // Y/o un RelationManager de secciones si prefieres no usar Repeater:
+            SectionsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index'  => Pages\ListGuideTemplates::route('/'),
+            'index' => Pages\ListGuideTemplates::route('/'),
             'create' => Pages\CreateGuideTemplate::route('/create'),
-            'edit'   => Pages\EditGuideTemplate::route('/{record}/edit'),
+            'view' => Pages\ViewGuideTemplate::route('/{record}'),
+            'edit' => Pages\EditGuideTemplate::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withCount('sections')
+            ->withoutGlobalScopes([SoftDeletingScope::class]);
     }
 }

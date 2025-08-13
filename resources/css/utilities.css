@@ -1,0 +1,17 @@
+/* Overrides y utilidades sueltas */
+@layer utilities {
+  /* Enfasis accesible en inputs Flux */
+  [data-flux-field]:not(ui-radio, ui-checkbox) { @apply grid gap-2; }
+  [data-flux-label] { @apply !mb-0 !leading-tight; }
+
+  input:focus[data-flux-control],
+  textarea:focus[data-flux-control],
+  select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+  }
+
+  /* Botones Flux deben siempre ser “clickables” (Safari) */
+  :where(button, [type="button"], [type="submit"]).flux-button,
+  .flux-button, .flux\:button, .flux\:modal\.close > button,
+  .flux\:modal\.trigger > button, [data-flux-button] { cursor: pointer; }
+}

@@ -3,18 +3,24 @@
 namespace App\Data;
 
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\DataCollection;
+use Carbon\Carbon;
 
 class GuideResponseData extends Data
 {
     public function __construct(
-        public readonly int                           $guide_template_id,
-        public readonly ?string                       $evaluator_name = null,
-        public readonly ?string                       $participant_name = null,
-        public readonly ?string                       $date = null,
-        public readonly ?string                       $cycle = null,
-        /** @var DataCollection<GuideItemResponseData> */
-        public readonly DataCollection                $item_responses,
-        public readonly float                         $total_score = 0.0,
+        public int $id,
+        public int $session_id,
+        public int $guide_template_id,
+        public float $total_score
     ) {}
+    
+    public static function fromModel($model): self
+    {
+        return new self(
+            id: $model->id,
+            session_id: $model->session_id,
+            guide_template_id: $model->guide_template_id,
+            total_score: $model->total_score
+        );
+    }
 }

@@ -30,6 +30,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+        ->passwordReset()
+        ->profile()
             ->sidebarFullyCollapsibleOnDesktop()
             ->maxContentWidth(MaxWidth::Full)
             ->defaultThemeMode(ThemeMode::Dark)
